@@ -4,14 +4,30 @@ import Product from '../models/Product.js';
 const router = express.Router();
 
 // Get all products
-router.get('/', async (req, res) => {
+// with optional search query
+// Example: /api/products?search=shoes
+router.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const { search } = req.query;
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [
+          { name: { $regex: search, $options: "i" } }, // case-insensitive match
+          { brand: { $regex: search, $options: "i" } },
+          { category: { $regex: search, $options: "i" } },
+        ],
+      };
+    }
+
+    const products = await Product.find(query);
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Add a new product
 router.post('/', async (req, res) => {

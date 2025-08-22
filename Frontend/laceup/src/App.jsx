@@ -1,21 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-// Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import CartPanel from "./components/CartPanel";
-import LoginPanel from "./components/LoginPanel";
-
-// Pages
 import Home from "./pages/Home";
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <Router>
-      <Navbar />
+      <Navbar onSearch={setSearchQuery} /> {/* pass setter */}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home searchQuery={searchQuery} />} />
       </Routes>
       <Footer />
     </Router>
